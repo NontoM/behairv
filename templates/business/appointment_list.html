@@ -1,0 +1,39 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Appointment List</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Service</th>
+          <th scope="col">Number</th>
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ appointment.user.first_name }}</td>
+            <td>{{ appointment.user.email }}</td>
+            <td>{{ appointment.service.name }}</td>  {# Assuming 'name' is the field you want to display from the Service model #}
+            <td>{{ appointment.number }}</td>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.time }}</td>
+            <td>
+              <a href="{% url 'appointment_detail' appointment.id %}" class="btn btn-primary btn-sm">Details</a>
+              <a href="{% url 'appointment_update' appointment.id %}" class="btn btn-warning btn-sm">Edit</a>
+              <a href="{% url 'appointment_delete' appointment.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

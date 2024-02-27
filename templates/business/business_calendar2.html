@@ -1,0 +1,146 @@
+<!-- business_calendar.html -->
+{% extends 'customer/calendar_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- Placeholder for the calendar -->
+<div class="container-fluid bg-light p-3">
+    <div class="row">
+        <div class="col-12">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<!-- Appointment Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="appointmentModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ action }} Appointment</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="appointmentModalBody">
+                <form method="post" action="{% url 'appointment_create' %}" id="appointmentForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="service" class="form-label">Service</label>
+                            <select class="form-select" id="service" name="service">
+                                {% for service in services %}
+                                <option value="{{ service.id }}" {% if service.id == selected_service_id %}selected{% endif %}>
+                                    {{ service.name }} {{ service.description }} R{{ service.price }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ appointment.date|date:'Y-m-d' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Time</label>
+                            <input type="time" class="form-control" id="time" name="time" value="{{ appointment.time }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Note</label>
+                            <textarea class="form-control" id="note" name="note">{{ appointment.note }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="{% url 'appointment_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+
+<!-- Initialize FullCalendar -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '{% url "get_appointments" %}',
+            dateClick: function (info) {
+                openAppointmentModal(info.date, null);
+            },
+            eventClick: function (info) {
+                openAppointmentModal(null, info.event.id);
+            },
+        });
+
+        calendar.render();
+
+        function openAppointmentModal(date, appointmentId) {
+            $('#date').val(date ? date.toISOString().slice(0, 10) : '');
+            $('#time').val('');
+            $('#note').val('');
+
+            if (appointmentId) {
+                var updateUrl = '{% url "appointment_update" appointment_id=0 %}'.replace("0", appointmentId);
+
+                $.ajax({
+                    url: updateUrl,
+                    method: 'GET',
+                    success: function (response) {
+                        // Populate form fields with appointment details
+                        $('#date').val(response.date);
+                        $('#time').val(response.time);
+                        $('#note').val(response.note);
+
+                        $('#appointmentModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.error('Error fetching appointment details:', error);
+                    }
+                });
+            } else {
+                // Load the create appointment form
+                $.ajax({
+                    url: '{% url "appointment_create" %}',
+                    method: 'GET',
+                    success: function (response) {
+                        // Set modal body with the create appointment form
+                        $('#appointmentModalBody').html(response);
+                        $('#appointmentModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.error('Error fetching create appointment form:', error);
+                    }
+                });
+            }
+        }
+
+        $('#appointmentForm').on('submit', function (event) {
+            event.preventDefault();
+            console.log('Form submitted!');  // Add this line
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    $('#appointmentModal').modal('hide');
+                    refreshCalendarEvents();
+                },
+                error: function (error) {
+                    console.error('Error submitting appointment form:', error);
+                }
+            });
+        });
+
+        function refreshCalendarEvents() {
+            if (calendar) {
+                calendar.refetchEvents();
+            }
+        }
+    });
+</script>
+{% endblock %}

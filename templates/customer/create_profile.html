@@ -1,0 +1,96 @@
+{% extends 'business/dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Create Profile</h2>
+    <form method="post" action="{% url 'create_profile' user_id=request.user.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="first_name" class="form-label">First Name:</label>
+                <input type="text" class="form-control" name="first_name" value="{{ profile.user.first_name }}">
+            </div>
+            <div class="col-md-6">
+                <label for="last_name" class="form-label">Last Name:</label>
+                <input type="text" class="form-control" name="last_name" value="{{ profile.user.last_name }}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" class="form-control" name="email" value="{{ profile.user.email }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address:</label>
+            <input type="text" class="form-control" name="address" value="{{ profile.user.address }}">
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="country" class="form-label">Country:</label>
+                <input type="text" class="form-control" name="country" value="{{ profile.user.country }}">
+            </div>
+            <div class="col-md-6">
+                <label for="city" class="form-label">City:</label>
+                <input type="text" class="form-control" name="city" value="{{ profile.user.city }}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="number" class="form-label">Number:</label>
+            <input type="text" class="form-control" name="number" value="{{ profile.user.number }}">
+        </div>
+
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender:</label>
+            <select class="form-select" name="gender" id="gender">
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="bio" class="form-label">Bio:</label>
+            <textarea class="form-control" name="bio" id="bio" rows="4"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="profile_picture" class="form-label">Profile Picture:</label>
+            <input type="file" class="form-control" name="profile_picture" id="profile_picture" onchange="previewProfilePicture()">
+        </div>
+
+        <div class="mb-3">
+            <img id="profile_picture_preview" style="max-width: 200px; max-height: 200px;" alt="Profile Picture Preview">
+        </div>
+
+        <div class="mb-3">
+            <label for="date_of_birth" class="form-label">Date of Birth:</label>
+            <input type="date" class="form-control" name="date_of_birth" id="date_of_birth">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Profile</button>
+    </form>
+</div>
+
+<script>
+    function previewProfilePicture() {
+        var input = document.getElementById('profile_picture');
+        var preview = document.getElementById('profile_picture_preview');
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

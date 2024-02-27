@@ -1,0 +1,77 @@
+{% load static %}
+<!--navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navArea">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">BEHAIRV</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="btn btn-light" href="/for_customer" role="button">For Customer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {% if profile.profile_picture %}
+          <img class="rounded-circle mx-auto mb-4" src="{{ profile.profile_picture.url }}" id="profile_picture" name="profile_picture" width="32" height="32" alt="Profile Picture">
+          {% else %}
+          <img src="{% static 'assets/images/no-profile-picture.png' %}" alt="default-profile-pic" width="32" height="32" class="rounded-circle">
+          {% endif %}          
+        </a>
+        <ul class="dropdown-menu text-small shadow dropdown-menu-end">
+          <li><a class="dropdown-item" href="#"><strong>{{request.user.first_name}} {{request.user.last_name}}</strong></a></li>
+          <li><a class="dropdown-item" href="/user_profile">Update Profile</a></li>
+          <li><a class="dropdown-item" href="/user_profile">Profile</a></li>
+          <li><a class="dropdown-item" href="#">Appointments</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="#">Download App</a></li>
+          <li><a class="dropdown-item" href="#">Support for business</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="/for_customer">For Customer</a></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'register' %}">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Menu
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="">Download App</a></li>
+          <li><a class="dropdown-item" href="#">Support for Business</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="/for_customer">For Customer</a></li>
+        </ul>
+      </div>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--/navbar-->
+
+
+
+

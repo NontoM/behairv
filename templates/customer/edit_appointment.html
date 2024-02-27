@@ -1,0 +1,90 @@
+{% extends 'main_pages/base.html' %}
+{% block content %}
+{% include 'includes/navbar.html' %}
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    {% if messages %}
+                    {% for foreachmessage in messages %}
+                    <h4 class="text-success">{{foreachmessage}}</h4>
+                    {% endfor %}
+                    {% else %}
+                    <h4 class="">Edit Appointment</h4>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form action="/update_department/{{appointmentid}}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" name="phone" value="{{patient.name}}"
+                                    required>
+                                </div>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control" name="doctor_id" required>
+                                            <option value="">{{dr.name}}</option>
+                                            {% for doctor_list in doctor_list %}
+                                            <option value="{{doctor_list.id}}">{{doctor_list.user.first_name}} {{doctor_list.department.desc}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="date" class="form-control" name="apointmentdate"  value="{{date}}" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="number" class="form-control" name="charges" value="{{amount}}"
+                                            required>
+                                    </div>
+                                                                        
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control" name="status" required>
+                                            <option value="">Appointment Status</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Confirmed">Confirmed</option>
+                                            <option value="Treaded">Treaded</option>
+                                            <option value="Nurse">Cancel</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control" name="paymenttype" required>
+                                            <option value="">{{paymenttype}}</option>
+                                            <option value="Bank">Bank</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Card">Card</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <select class="form-control" name="payment_status" required>
+                                            <option value="">{{status}}</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Paid">Paid</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control" name="remarks" value="{{remark}}"
+                                            required>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <input type="text" class="form-control" name="visitdesc" value="{{visitdsc}}"
+                                            required>
+                                    </div>
+                
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Save</button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content%}
+

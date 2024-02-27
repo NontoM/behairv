@@ -1,0 +1,43 @@
+<!-- business/working_hours_form.html -->
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>{{ action }} Working Hours</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="day" class="form-label">Day</label>
+        <select class="form-select" id="day" name="day">
+            {% for day_value, day_label in day_choices %}
+                <option value="{{ day_value }}" {% if working_hours.day == day_value %}selected{% endif %}>
+                    {{ day_label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+
+      <div class="mb-3">
+        <label for="opening_time" class="form-label">Opening Time</label>
+        <input type="time" class="form-control" id="opening_time" name="opening_time" value="{{ working_hours.opening_time|default:''|time:'H:i' }}">
+      </div>
+      <div class="mb-3">
+        <label for="closing_time" class="form-label">Closing Time</label>
+        <input type="time" class="form-control" id="closing_time" name="closing_time" value="{{ working_hours.closing_time|default:''|time:'H:i' }}">
+      </div>
+      <div class="mb-3">
+        <label for="additional_info" class="form-label">Additional Info</label>
+        <textarea class="form-control" id="additional_info" name="additional_info">{{ working_hours.additional_info }}</textarea>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="closed" name="closed" {% if working_hours.closed %}checked{% endif %}>
+        <label class="form-check-label" for="closed">Closed</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <a href="{% url 'working_hours_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

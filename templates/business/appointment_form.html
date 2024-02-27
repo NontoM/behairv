@@ -1,0 +1,44 @@
+{% load static %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="mb-3">
+    {% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    </div>
+  <form method="post" id="appointmentForm" action="{% if action == 'Create' %}{% url 'appointment_create' %}{% elif action == 'Update' %}{% url 'appointment_update' appointment.id %}{% endif %}">
+    {% csrf_token %}
+            <div class="mb-3">
+              <label for="service" class="form-label">Service</label>
+              <select class="form-select" id="service" name="service">
+                  {% for service in services %}
+                      <option value="{{ service.id }}" {% if service.id == selected_service_id %}selected{% endif %}>{{ service.name }} {{ service.description }} R{{ service.price }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="date" name="date" value="{{ appointment.date|date:'Y-m-d' }}">
+            </div>
+            <div class="mb-3">
+              <label for="time" class="form-label">Time</label>
+              <input type="time" class="form-control" id="time" name="time" value="{% if action == 'Update' %}{{ appointment.time|time:'H:i' }}{% endif %}">
+            </div>
+            <div class="mb-3">
+              <label for="note" class="form-label">Note</label>
+              <textarea class="form-control" id="note" name="note">{{ appointment.note }}</textarea>
+          </div> 
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="{% url 'appointment_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+   </div>
+{% endblock %}

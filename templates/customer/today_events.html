@@ -1,0 +1,98 @@
+{% extends 'customer/calendar_base.html' %}
+{% load static %}
+{% block content %}
+
+<!--Todays' Events-->
+<div class=" mt-3">
+  <div class="card-header pt-3">
+    <h2>Events for {{ current_date|date:"F j, Y" }}</h2>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table id="example" class="display nowrap" style="width:100%">
+        <thead>
+          <tr>
+            <th>
+              <div class="custom-control custom-checkbox checkbox-success check-lg mr-3">
+                <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
+                <label class="custom-control-label" for="customCheckBox2"></label>
+              </div>
+            </th>
+            <th><strong>#NO.</strong></th>
+            <th><strong>Title</strong></th>
+            <th><strong>Start Time</strong></th>
+            <th><strong>End Time</strong></th>
+            <th><strong>Options</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr> <!-- this line inside the loop creates a new row for each event -->
+            <td>
+              <div class="custom-control custom-checkbox checkbox-success check-lg me-3 mt-2">
+                <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
+                <label class="custom-control-label" for="customCheckBox2"></label>
+              </div>
+            </td>
+            <td>
+              <div class="mt-2">{{event.id}}</div>
+            </td>
+            <td>
+              <div class="mt-2">{{ event.title }}</div>
+            </td>
+            <td>
+              <div class="mt-2">{{ event.start_time|date:"F j, Y H:i" }}</div>
+            </td>
+            <td>
+              <div class="mt-2"> {{ event.end_time|date:"F j, Y H:i" }}</div>
+            </td>
+            <td>
+              <div class="d-flex">
+                <a href="/edit_event/{{event.id}}" class="btn btn-primary shadow btn-xs sharp me-1"
+                  onclick="if(!confirm('Are you sure you want to edit this Appointment?')){return false;}"><i
+                    class="fa fa-pencil"></i></a>
+                <a href="/delete_event/{{event.id }}%}" class="btn btn-danger shadow btn-xs sharp"><i
+                    class="fa fa-trash"></i></a>
+              </div>
+            </td>
+          </tr> <!-- Move this line inside the loop to create a new row for each event -->
+          {% empty %}
+          <tr>
+            <td colspan="6">No Events Found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>
+              <div class="custom-control custom-checkbox checkbox-success check-lg mr-3">
+                <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
+                <label class="custom-control-label" for="customCheckBox2"></label>
+              </div>
+            </th>
+            <th><strong>#NO.</strong></th>
+            <th><strong>Title</strong></th>
+            <th><strong>Start Time</strong></th>
+            <th><strong>End Time</strong></th>
+            <th><strong>Options</strong></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+
+ 
+
+  <script>
+    $(document).ready(function () {
+      $('#example').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+      });
+    });
+  </script>
+
+  {% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <h2>Working Hours Detail</h2>
+  <p><strong>Day:</strong> {{ working_hours.day }}</p>
+  <p><strong>Opening Time:</strong> {{ working_hours.opening_time }}</p>
+  <p><strong>Closing Time:</strong> {{ working_hours.closing_time }}</p>
+  <a href="{% url 'working_hours_list' %}" class="btn btn-primary">Back to List</a>
+{% endblock %}

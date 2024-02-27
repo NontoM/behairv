@@ -1,0 +1,223 @@
+{% extends 'main_pages/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block head_title %}Home{% endblock head_title %}
+
+{% block content %}
+
+{% include 'includes/navbar.html' %}
+
+<!-- ======= Breadcrumb Start ======= -->
+<nav aria-label="breadcrumb" class="container-fluid mt-5 pt-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Business</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Catalog</li>
+  </ol>
+</nav>
+<!-- Breadcrumb End -->
+
+<div class="container-fluid">
+  <ul class="d-inline-flex list-inline">
+    <li class="pe-2">Ratings</li>
+    <li class="pe-2">Trading Hours</li>
+    <li class="pe-2">Get Directions</li>
+  </ul>
+</div>
+
+<div class="mb-3">
+  {% timezone "Africa/Johannesburg" %}
+      {% now "l" as current_day %}
+      {% now "H:i" as current_time %}
+    {% endtimezone %}
+    <div class="mb-3">
+      <strong>Current Day Status:</strong>
+      {% for working_hours in working_hours_list %}
+        {% if current_day == working_hours.day %}
+          {% if not working_hours.closed %}
+            {% if working_hours.opening_time and working_hours.closing_time %}
+              {% with opening_time=working_hours.opening_time|time:"H:i" closing_time=working_hours.closing_time|time:"H:i" %}
+                {% if current_time >= opening_time and current_time <= closing_time %}
+                  <span class="text-success">Open</span>
+                {% elif current_time < opening_time %}
+                  <span class="text-danger">Closed - Not Opened Yet</span>
+                {% elif current_time > closing_time %}
+                  <span class="text-danger">Closed - Already Closed</span>
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              <span class="text-danger">Closed - Day Mismatch</span>
+            {% endif %}
+          {% else %}
+            <span class="text-danger">Closed - Explicitly Closed</span>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+</div>
+
+<!-- ======= About Section Start ======= -->
+<section class="pt-5 mt-5 pb-5" id="about">
+  <div class="container-fluid pt-5 pb-5">
+    <div class="row g-5">
+      <div class="col-lg-5 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+        <div class="h-100 position-relative">
+          <img src="{% static 'assets/images/about-2.jpg' %}" class="img-fluid w-100 rounded" alt="business-image">
+          <div class="position-absolute w-75" style="top: 5%; left: 0%;">
+            <img src="{% static 'assets/images/logo1.png' %}" class="img-fluid w-75 rounded bg-dark"
+              alt="business-logo">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".5s">
+        <h5 class="text-primary">About Us</h5>
+        <h1 class="mb-4 display-1 text-uppercase">Best Vision Salon</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur quis purus ut interdum. Pellentesque
+          aliquam dolor eget urna ultricies tincidunt. Nam volutpat libero sit amet leo cursus, ac viverra eros
+          tristique. Morbi quis quam mi. Cras vel gravida eros. Proin scelerisque quam nec elementum viverra.
+          Suspendisse viverra hendrerit diam in tempus. Etiam gravida justo nec erat vestibulum, et malesuada augue
+          laoreet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- About Section End -->
+
+<!-- ======= Services Section Start ======= -->
+<section class="bg-light pt-5 pb-5" id="services">
+  <div class="container-fluid pb-5">
+    <div class="h-100 d-flex flex-column justify-content-center align-items-center p-5">
+      <p class="d-inline-flex bg-dark text-primary py-1 px-4 ">Price & Plan</p>
+      <h1 class="text-uppercase mb-4">Check Out Our Services And Prices</h1>
+    </div>
+
+    <div class="row g-5">
+      <div class="col-lg-5 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+        <div class="card mb-3 border-0 rounded-0 shadow-sm">
+          <div class="card-body">
+            <h2 class="card-title">Best Vision Salon</h2>
+            <p class="card-text">Ratings</p>
+            <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#appointmentModal">Book Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".5s">
+        <table class="table shadow-sm">
+          <thead>
+            <tr>
+              <th scope="col">Service Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Price (R)</th>
+              <th scope="col">Book</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for service in services %}
+              <tr>
+                <td>{{ service.name }}</td>
+                <td>{{ service.description }}</td>
+                <td>R{{ service.price }}</td>
+                <td>
+                  <a href="#" class="btn btn-secondary btn-sm book-now-btn" data-bs-toggle="modal" data-bs-target="#appointmentModal" data-service-id="{{ service.id }}">Book Now</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Services Section End -->
+
+<!-- ======= Working Hours Section Start ======= -->
+<section class="pt-5 pb-5" id="working-hours">
+  <div class="container-fluid pt-5 pb-5">
+    <div class="row g-5">
+      <div class="col-lg-6 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+        <div class="bg-secondary h-100 d-flex flex-column justify-content-center p-5">
+          <p class="d-inline-flex bg-dark text-primary py-1 px-4 me-auto">Working Hours</p>
+          <h1 class="text-uppercase mb-4">Professional Barbers Are Waiting For You</h1>
+
+          {% for working_hours in working_hours_list %}
+            <div class="d-flex justify-content-between border-bottom py-2 {% if working_hours.day == current_day %}current-day{% endif %}">
+              <h6 class="text-uppercase mb-0">{{ working_hours.day }}</h6>
+              {% if not working_hours.closed %}
+                <span class="text-uppercase">{{ working_hours.opening_time|time:"H:i" }} - {{ working_hours.closing_time|time:"H:i" }}</span>
+              {% else %}
+                <span class="text-uppercase text-primary">Closed</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+        <div class="h-100">
+          <img class="img-fluid h-100" src="{% static 'assets/images/about-2.jpg' %}" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Working Hours Section End -->
+
+<!-- Appointment Modal Start -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="appointmentModalLabel">Book Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'appointment_create' %}" id="appointmentForm">
+          {% csrf_token %}
+          <div class="mb-3">
+              <label for="service" class="form-label">Service</label>
+              <select class="form-select" id="service" name="service">
+                {% for service in services %}
+                <option value="{{ service.id }}">{{ service.name }} - {{ service.price }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          
+          <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="date" name="date">
+          </div>
+          <div class="mb-3">
+              <label for="time" class="form-label">Time</label>
+              <input type="time" class="form-control" id="time" name="time">
+          </div>
+          <div class="mb-3">
+              <label for="note" class="form-label">Note</label>
+              <textarea class="form-control" id="note" name="note"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="{% url 'appointment_list' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Appointment Modal End -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var bookNowButtons = document.querySelectorAll('.book-now-btn');
+
+    bookNowButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var serviceId = button.dataset.serviceId;
+        document.getElementById('service').value = serviceId;
+      });
+    });
+  });
+</script>
+
+
+{% include 'includes/footer.html' %}
+
+{% endblock content %}

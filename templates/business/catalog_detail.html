@@ -1,0 +1,51 @@
+<!-- your_app/catalog_detail.html -->
+{% extends 'main_pages/base.html' %}
+{% load static %}
+{% block head_title %}{{ catalog.business_name }} Catalog{% endblock head_title %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="mb-4">{{ catalog.business_name }} Catalog</h1>
+    <!-- Display catalog details -->
+
+    <div class="mb-3">
+        <strong>Business Name:</strong> {{ catalog.business_name }}
+    </div>
+    <div class="mb-3">
+        <strong>Business Contact:</strong> {{ catalog.business_contact }}
+    </div>
+    <div class="mb-3">
+        <strong>Bio:</strong> {{ catalog.bio }}
+    </div>
+    <div class="mb-3">
+        <strong>Service:</strong> {{ catalog.service.name }}
+    </div>
+    <div class="mb-3">
+        <strong>Appointment:</strong> {{ catalog.appointment.name }}
+    </div>
+    <div class="mb-3">
+        <strong>Working Hours:</strong> {{ catalog.working_hours.day }} {{ catalog.working_hours.start_time }} - {{ catalog.working_hours.end_time }}
+    </div>
+    <div class="mb-3">
+        <strong>Business Cover Pic:</strong>
+        {% if catalog.business_cover_pic %}
+            <img src="{{ catalog.business_cover_pic.url }}" alt="Business Cover Pic" class="img-fluid">
+        {% else %}
+        Upload your business Picture.
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <strong>Business Logo:</strong>
+        {% if catalog.business_logo %}
+            <img src="{{ catalog.business_logo.url }}" alt="Business Logo" class="img-fluid">
+        {% else %}
+Upload your business Logo
+        {% endif %}
+    </div>
+    <!-- Add other details as needed -->
+
+    <a href="{% url 'catalog_update' catalog_id=catalog.id %}" class="btn btn-warning">Edit</a>
+    <a href="{% url 'catalog_delete' catalog_id=catalog.id %}" class="btn btn-danger">Delete</a>
+</div>
+
+{% endblock content %}

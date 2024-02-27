@@ -1,0 +1,143 @@
+{% extends 'customer/calendar_base.html' %}
+{% load static %}
+{% block content %}
+
+<!--Past Events-->
+<div class=" mt-3 mb-5">
+  <div class="card-header pt-3 pb-3">
+    <h2>Appointments History</h2>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table id="example" class="display nowrap" style="width:100%">
+          <thead>
+            <tr>
+              <th>
+                <div class="custom-control custom-checkbox checkbox-success check-lg mr-3">
+                  <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
+                  <label class="custom-control-label" for="customCheckBox2"></label>
+                </div>
+              </th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Service</th>
+              <th scope="col">Number</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Note</th>
+              <th scope="col">Options</th> <!-- Added for the Options column -->
+            </tr>
+          </thead>
+          <tbody>
+            {% for appointment in appointments %}
+                <tr>
+                    <td>
+                        <div class="custom-control custom-checkbox checkbox-success check-lg me-3 mt-2">
+                            <input type="checkbox" class="custom-control-input" id="customCheckBox{{ appointment.id }}" required="">
+                            <label class="custom-control-label" for="customCheckBox{{ appointment.id }}"></label>
+                        </div>
+                    </td>
+                    <td>{{ appointment.user.first_name }}</td>
+                    <td>{{ appointment.user.email }}</td>
+                    <td>{{ appointment.service.name }}</td>
+                    <td>{{ appointment.number }}</td>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>{{ appointment.note }}</td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="/appointment_detail/{{appointment.id}}" class="btn btn-primary shadow btn-xs sharp me-1" data-bs-toggle="modal" data-bs-target="#detailModal{{ appointment.id }}">
+                                <i class="fa fa-info"></i>
+                            </a>
+                            <!-- Button to open the delete modal -->
+                            <button class="btn btn-danger shadow btn-xs sharp" data-bs-toggle="modal" data-bs-target="#deleteModal{{ appointment.id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Modal for Appointment Details -->
+                <div class="modal fade" id="detailModal{{ appointment.id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ appointment.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailModalLabel{{ appointment.id }}">Appointment Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                        <p class="list-group-item"><strong>Name:</strong> {{ appointment.user.first_name }}</p>
+                                        <p class="list-group-item"><strong>Email:</strong> {{ appointment.user.email }}</p>
+                                        <p class="list-group-item"><strong>Service:</strong> {{ appointment.service }}</p>
+                                        <p class="list-group-item"><strong>Number:</strong> {{ appointment.user.number }}</p>
+                                        <p class="list-group-item"><strong>Date:</strong> {{ appointment.date }}</p>
+                                        <p class="list-group-item"><strong>Time:</strong> {{ appointment.time }}</p>
+                                        <p class="list-group-item"><strong>Note:</strong> {{ appointment.note }}</p>
+                                      </ul>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                      </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center pt-4 pb-4 border-top border-bottom">No Past Appointments Found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    <div class="custom-control custom-checkbox checkbox-success check-lg mr-3">
+                        <input type="checkbox" class="custom-control-input" id="customCheckBoxAllFooter" required="">
+                        <label class="custom-control-label" for="customCheckBoxAllFooter"></label>
+                    </div>
+                </th>
+                <!-- ... (rest of the table footer) ... -->
+            </tr>
+        </tfoot>
+    </table>
+</div>
+</div>
+</div>
+
+<!-- Modal for Delete Confirmation -->
+{% for appointment in appointments %}
+<div class="modal fade" id="deleteModal{{ appointment.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ appointment.id }}" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel{{ appointment.id }}">Confirm Deletion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+            <p class="pb-2">Are you sure you want to delete the appointment for <strong>{{ appointment.service.name }}</strong>?</p>
+            <form method="post" action="{% url 'appointment_delete' appointment.id %}" id="appointmentDelete">
+                {% csrf_token %}
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+    </div>
+</div>
+</div>
+</div>
+{% endfor %}
+
+{% if appointments %}
+
+<script>
+$(document).ready(function () {
+$('#example').DataTable({
+    dom: 'Bfrtip',
+    buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
+});
+});
+</script>
+{% endif %}
+
+{% endblock %}

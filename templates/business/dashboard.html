@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/activedashboard.css' %}">
+    <!--calendar links-->
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js'></script>
+
+
+    <!--Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+
+    <style>
+        /*search icon */
+        .ms-n5 {
+            margin-left: -40px;
+        }
+
+        /* profile-pic cover img */
+
+        .card {
+            border: none;
+            /* Remove default card border */
+        }
+
+        .cover-image {
+            background-size: cover;
+        }
+
+        .profile-pic {
+            border: 5px solid red;
+            /* Add a border around the profile picture */
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- ======== Main wrapper for dashboard =========== -->
+
+    <div class="wrapper">
+        <!-- =========== Sidebar for admin dashboard =========== -->
+        <aside id="sidebar">
+            <!-- ======== Content For Sidebar ========-->
+            <div class="h-100">
+                <div class="sidebar-logo">
+                    <a href="/">BEHAIRV</a>
+                </div>
+                <!-- ======= Navigation links for sidebar ======== -->
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">
+                        Admin Elements
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fa-solid fa-list"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#appointments" aria-expanded="false">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            Appointment
+                        </a>
+                        <ul id="appointments" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item ps-4">
+                                <a href="/appointment_list" class="sidebar-link">Appointment List</a>
+                                <a href="/add_appointment" class="sidebar-link">Add Appointment</a>
+
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Page 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                            data-bs-target="#favourites" aria-expanded="false">
+                            <i class="fa-solid fa-star"></i>
+                            Calendar
+                        </a>
+                        <ul id="favourites" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item ps-4">
+                                <a href="/calendar" class="sidebar-link">Event Planner</a>
+                                <a href="/create_event" class="sidebar-link">Add Event</a>
+                                <a href="/today_events" class="sidebar-link">Today's Events</a>
+                                <a href="/past_events" class="sidebar-link">Events History</a>
+                                <a href="/all_events" class="sidebar-link">All Events</a>
+
+
+
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Page 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{% url 'user_profile' user_id=user.id %}" class="sidebar-link">
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#posts"
+                            aria-expanded="false">
+                            <i class="fa-solid fa-sliders pe-2"></i>
+                            Posts
+                        </a>
+                        <ul id="posts" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Post 1</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Post 2</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Post 3</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#auth"
+                            aria-expanded="false">
+                            <i class="fa-regular fa-user pe-2"></i>
+                            Auth
+                        </a>
+                        <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Login</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Register</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Forgot Password</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-header">
+                        Multi Level Menu
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="" class="sidebar-link">
+                            <i class="fa-solid fa-download"></i>
+                            Download app
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        <!-- ========= Main section of dashboard ======= -->
+        <div class="main">
+            <!-- ========= Main navbar section of dashboard ======= -->
+            <nav class="navbar navbar-expand px-3 border-bottom">
+                <button class="btn" id="sidebar-toggle" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse navbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown me-3">
+                            <form class="w-100" role="search">
+                                <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                            </form>
+                        <li>
+                        <li>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                {% if app_message %}
+                                <div id="DZ_W_Notification1" class="widget-media dz-scroll p-3 height380">
+                                    <ul class="timeline">
+                                        {% for app_message in app_message %}
+                                        <li>
+                                            <div class="timeline-panel">
+                                                <div class="media mr-2">
+                                                    <a href="/app_notification_detail/{{app_message.id}}"><img
+                                                            alt="image" width="30"
+                                                            src="{% static 'assets/images/user.png' %}"></a>
+                                                </div>
+
+                                                <div class="media-body">
+                                                    <a href="/app_notification_detail/{{app_message.id}}">
+                                                        <h6 class="mb-1">{{app_message.names}}</h6>
+                                                    </a>
+                                                    <small class="d-block">{{app_message.created_at}}</small>
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                                {% else %}
+
+                                {% endif %}
+                                <a class="all-notification" href="/app_notification_list">See all messages <i
+                                        class="ti-arrow-right"></i></a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown me-3">
+                            <a href="#" data-bs-toggle="dropdown" class="nav-con pe-md-0 dropdown-toggle">
+                                {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="profile-picture" class="rounded-circle mx-auto mb-4" id="profile_picture" name="profile_picture" width="32" height="32">
+                                {% else %}
+                                <img src="{% static 'assets/images/no-profile-picture.png' %}" alt="default-profile-pic" class="rounded-circle mx-auto mb-4"  id="default-profile_picture" name="default-profile_picture" width="32" height="32">
+                                {% endif %}   
+                            </a>
+
+                            <ul class="dropdown-menu text-small shadow dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><strong>{{request.user.first_name}}{{request.user.last_name}}</strong></a></li>
+                                <li><a class="dropdown-item" href="/user_profile">Update Profile</a></li>
+                                <li><a class="dropdown-item" href="/user_profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Appointments</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Download App</a></li>
+                                <li><a class="dropdown-item" href="#">Support for business</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/for_customer">For Customer</a></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- ========= Main content section of dashboard ======= -->
+            <main class="content px-3 py-2">
+              
+
+
+
+                {% block content %}
+
+                {% endblock content %}
+            </main>
+
+            <!-- ========= light and dark mode toggle button ======= -->
+
+            <a href="#" class="theme-toggle">
+                <i class="fa-regular fa-moon"></i>
+                <i class="fa-regular fa-sun"></i>
+            </a>
+
+            <!-- ========= footer section of dashboard ======= -->
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Copyright -->
+                        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+                            © {% now "Y" %} Copyright:
+                            <a class="text-reset fw-bold" href="#">Behairv</a>
+                        </div>
+                        <!-- Copyright -->
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'assets/js/activedashboard.js' %}"></script>
+</body>
+
+</html>

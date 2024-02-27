@@ -1,0 +1,24 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+    <h2>Search Results</h2>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for place in places %}
+                <tr>
+                    <td>{{ place.location }}</td>
+                    <td>{{ place.category.name }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{% url 'search_places' %}" class="btn btn-primary">New Search</a>
+{% endblock %}

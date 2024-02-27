@@ -1,0 +1,125 @@
+{% extends 'main_pages/base.html' %}
+{% load static %}
+{% block head_title %}Home{% endblock head_title %}
+{% block content %}
+
+{% include 'includes/navbar.html' %}
+  <!-- About Start -->
+<section class="py-5 my-5">
+	<div class="container-fluid pt-5">
+		<div class="row g-5">
+			<div class="col-lg-5 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+				<div class="h-100 position-relative">
+					<img src="{% static 'assets/images/about-2.jpg' %}" class="img-fluid w-100 rounded" alt="" style="margin-bottom: 25%;">
+					<div class="position-absolute w-75" style="top: 5%; left: 0%;">
+						<img src="{% static 'assets/images/logo1.png' %}" class="img-fluid w-75 rounded bg-dark" alt="">
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".5s">
+				<h5 class="text-primary">About Us</h5>
+				<h1 class="mb-4 display-1 text-uppercase">Best Vision Salon</h1>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur quis purus ut interdum. Pellentesque aliquam dolor eget urna ultricies tincidunt. Nam volutpat libero sit amet leo cursus, ac viverra eros tristique. Morbi quis quam mi. Cras vel gravida eros. Proin scelerisque quam nec elementum viverra. Suspendisse viverra hendrerit diam in tempus. Etiam gravida justo nec erat vestibulum, et malesuada augue laoreet.</p>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- About End -->
+
+  <!-- Services Start -->
+  <section class="py-5 my-5">
+	<div class="container-fluid pt-5">
+		<div class="h-100 d-flex flex-column justify-content-center align-items-center p-5">
+		<p class="d-inline-flex bg-dark text-primary py-1 px-4 ">Price & Plan</p>
+        <h1 class="text-uppercase mb-4">Check Out Our Services And Prices</h1>
+		</div>
+		
+		<div class="row g-5">
+			<div class="col-lg-5 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+				<div class="h-100 position-relative">
+					<img src="{% static 'assets/images/about-1.jpg' %}" class="img-fluid w-100 rounded" alt="" style="margin-bottom: 25%;">
+					<div class="position-absolute w-75" style="bottom: 25%; left: 5%;">
+						<img src="{% static 'assets/images/logo1.png' %}" class="img-fluid w-75 rounded bg-dark" alt="">
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".5s">
+				<table class="table">
+					<thead>
+					  <tr>
+						<th scope="col">Service</th>
+						<th scope="col">Price</th>
+						<th scope="col">Book</th>
+					  </tr>
+					</thead>
+					<tbody class="table-group-divider">
+					  <tr>
+						<td>Hair color</td>
+						<td>R 200.00</td>
+						<td><button type="button" class="btn btn-secondary btn-sm">Book</button>
+						</td>
+					  </tr>
+					  <tr>
+						<td>Wig installation</td>
+						<td>R500.00</td>
+						<td><button type="button" class="btn btn-secondary btn-sm">Book</button>
+						</td>
+					  </tr>
+	
+					</tbody>
+				  </table>	</div>
+		</div>
+	</div>
+</section>
+<!-- Services End -->
+
+    <!-- Working Hours Start -->
+	<section class="bg-light py-5">
+        <div class="container-fluid">
+            <div class="row g-5">
+				<div class="col-lg-6 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+                    <div class="bg-secondary h-100 d-flex flex-column justify-content-center p-5">
+                        <p class="d-inline-flex bg-dark text-primary py-1 px-4 me-auto">Working Hours</p>
+                        <h1 class="text-uppercase mb-4">Professional Barbers Are Waiting For You</h1>
+                        <div>
+                            <div class="d-flex justify-content-between border-bottom py-2">
+                                <h6 class="text-uppercase mb-0">Monday</h6>
+                                <span class="text-uppercase">09 AM - 09 PM</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-bottom py-2">
+                                <h6 class="text-uppercase mb-0">Tuesday</h6>
+                                <span class="text-uppercase">09 AM - 09 PM</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-bottom py-2">
+                                <h6 class="text-uppercase mb-0">Wednesday</h6>
+                                <span class="text-uppercase">09 AM - 09 PM</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-bottom py-2">
+                                <h6 class="text-uppercase mb-0">Thursday</h6>
+                                <span class="text-uppercase">09 AM - 09 PM</span>
+                            </div>
+                            <div class="d-flex justify-content-between border-bottom py-2">
+                                <h6 class="text-uppercase mb-0">Friday</h6>
+                                <span class="text-uppercase">09 AM - 09 PM</span>
+                            </div>
+                            <div class="d-flex justify-content-between py-2">
+                                <h6 class="text-uppercase mb-0">Sat / Sun</h6>
+                                <span class="text-uppercase text-primary">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="col-lg-6 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
+                    <div class="h-100">
+                        <img class="img-fluid h-100" src="{% static 'assets/images/about-2.jpg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+	</section>
+    <!-- Working Hours End -->
+
+	{% include 'includes/footer.html' %}
+
+
+    {% endblock content %}

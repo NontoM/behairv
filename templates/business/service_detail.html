@@ -1,0 +1,18 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Service Details</h2>
+    <dl class="row">
+      <dt class="col-sm-3">Name:</dt>
+      <dd class="col-sm-9">{{ service.name }}</dd>
+
+      <dt class="col-sm-3">Description:</dt>
+      <dd class="col-sm-9">{{ service.description }}</dd>
+
+      <dt class="col-sm-3">Price:</dt>
+      <dd class="col-sm-9">{{ service.price }}</dd>
+    </dl>
+    <a href="{% url 'service_list' %}" class="btn btn-primary">Back to List</a>
+  </div>
+{% endblock %}

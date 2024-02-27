@@ -1,0 +1,85 @@
+{% extends 'customer/calendar_base.html' %}
+
+{% block content %}
+    <!-- Message container for success or error messages -->
+    <div id="message-container" class="alert" style="display: none;"></div>
+
+    <div class="container mt-3 mb-3">
+        <!-- Placeholder for the edit form -->
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Edit Event</h2>
+                <form method="post" action="{% url 'edit_event' event_id %}" id="editEventForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" class="form-control" name="title" value="{{ event.title }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_time" class="form-label">Start Time:</label>
+                        <input type="datetime-local" class="form-control" name="start_time"
+                               value="{{ event.start_time|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_time" class="form-label">End Time:</label>
+                        <input type="datetime-local" class="form-control" name="end_time"
+                               value="{{ event.end_time|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="editEventSubmit">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // Function to get the CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === name + '=') {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    
+        // Handle form submission for editing events
+        $('#editEventForm').on('submit', function (event) {
+            event.preventDefault();
+            
+            var csrftoken = getCookie('csrftoken'); // Get the CSRF token
+    
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRFToken': csrftoken, // Include the CSRF token in the request headers
+                },
+                success: function (response) {
+                    // Close the edit form and display a message
+                    $('#editDeleteEventModal').modal('hide');
+                    displayMessage(response.message, response.status);
+                    // Update the calendar immediately
+                    refreshCalendarEvents();
+                },
+                error: function (error) {
+                    console.log(error.responseText);
+                    alert("An error occurred: " + error.responseText); // Display the error response
+                }
+            });
+        });
+    </script>
+    
+{% endblock %}

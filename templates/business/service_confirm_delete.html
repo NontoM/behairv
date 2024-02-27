@@ -1,0 +1,13 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete the service "{{ service.name }}"?</p>
+    <form method="post" action="{% url 'service_delete' service.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <a href="{% url 'service_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

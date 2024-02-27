@@ -1,0 +1,34 @@
+{% extends 'main_pages/base.html' %}
+{% block content %}
+
+<!-- ======= register ======= -->
+<br><br><br><br>
+<section id="register" class="register">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">For Clients</h3>
+                        <p class="card-text">Book a hairstylist near you...</p>
+                        <a class="btn btn-info" href="{% url 'customer_register' %}">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">For Business</h3>
+                        <p class="card-text"> Let your services known...</p>
+                        <a class="btn btn-info" href="{% url 'business_register' %}">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- register -->
+{% endblock content %}

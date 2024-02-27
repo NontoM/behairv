@@ -1,0 +1,31 @@
+html,body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    
+}
+
+#hero-h1{
+    font-size: 80px;
+}
+
+#calendar {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 15px;
+
+}
+
+.fc-event {
+    border: 1px solid #eee !important;
+}
+
+/* navbar 
+
+.navbar.fixed-top {
+    transition: padding 0.3s ease, background-color 0.3s ease;
+}*/
+
+

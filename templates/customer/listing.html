@@ -1,0 +1,43 @@
+{% extends 'main_pages/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h1>Multi-Field Search</h1>
+    <form>
+        <div class="row border border pb-3">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="category" class="d-none">Category</label>
+                    <select class="form-select mt-3 border-0 border-end rounded-0" id="category">
+                        <option value="">Treatment or Venue</option>
+                        <option value="category1">Category 1</option>
+                        <option value="category2">Category 2</option>
+                        <option value="category3">Category 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="location" class="d-none">Location</label>
+                    <select class="form-select mt-3 border-0 border-end rounded-0" id="location">
+                        <option value="">Select location...</option>
+                        <option value="location1">Location 1</option>
+                        <option value="location2">Location 2</option>
+                        <option value="location3">Location 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="keywords" class="d-none">Keywords</label>
+                    <input type="text" class="form-control mt-3 border-0" id="keywords" placeholder="Enter keywords...">
+                </div>
+            </div>
+            <div class="col-md-2 text-center">
+                <button type="submit" class="btn btn-info text-white mt-3">Search Behairv</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

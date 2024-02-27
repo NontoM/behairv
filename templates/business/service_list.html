@@ -1,0 +1,31 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Service List</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for service in services %}
+          <tr>
+            <td>{{ service.name }}</td>
+            <td>{{ service.description }}</td>
+            <td>{{ service.price }}</td>
+            <td>
+              <a href="{% url 'service_detail' service.id %}" class="btn btn-info">Details</a>
+              <a href="{% url 'service_update' service.id %}" class="btn btn-warning">Update</a>
+              <a href="{% url 'service_delete' service.id %}" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

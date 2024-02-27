@@ -1,0 +1,24 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+<div class="container-fluid mt-4 pt-4">
+  <h2>Additional Information</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Additional Information</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ additional_info }}</td>
+        <td>
+          <a href="{% url 'working_hours_update' working_hours_list.0.id %}" class="btn btn-primary">Edit</a>
+          <a href="{% url 'working_hours_delete' working_hours_list.0.id %}" class="btn btn-danger">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

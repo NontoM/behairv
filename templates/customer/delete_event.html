@@ -1,0 +1,46 @@
+{% extends 'customer/calendar_base.html' %}
+
+{% block content %}
+    <!-- Message container for success or error messages -->
+    <div id="message-container" class="alert" style="display: none;"></div>
+
+    <div class="container mt-3 mb-3">
+        <!-- Placeholder for the delete form -->
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Delete Event</h2>
+                <form method="post" id="deleteEventForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <p>Are you sure you want to delete this event?</p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" id="deleteEventButton">Delete Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle form submission for event deletion
+        $('#deleteEventForm').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                success: function (response) {
+                    // Close the delete form and display a message
+                    $('#deleteEventModal').modal('hide');
+                    displayMessage(response.message, response.status);
+                    // Update the calendar immediately
+                    refreshCalendarEvents();
+                },
+                error: function (error) {
+                    displayMessage(error.responseJSON.message, 'error');
+                }
+            });
+        });
+    </script>
+    
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends 'business/dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+    <!--row-->
+    <div class="row">
+        <div class="col-md-8 mb-3">
+            <div class="card card-body border-0 shadow mb-4">
+                <h2 class="h5 mb-4 pt-5">General information</h2>
+                <form method="POST" action="{% url 'create_or_update_profile' user.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- User fields -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">Firstname</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name"
+                                    value="{{ user.first_name }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div>
+                                <label for="last_name" class="form-label">Lastname</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name"
+                                    value="{{ user.last_name }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" name="email" id="email"
+                                    value="{{ user.email }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div>
+                                <label for="username" class="form-label">Username:</label>
+                                <input type="text" class="form-control" name="username" maxlength="150" id="username"
+                                    value="{{ user.username }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile fields -->
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="date_of_birth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{% if profile.date_of_birth %}{{ profile.date_of_birth|date:'Y-m-d' }}{% endif %}">
+                    </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="0" {% if profile.gender == 0 %}selected{% endif %}>Male</option>
+                                <option value="1" {% if profile.gender == 1 %}selected{% endif %}>Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Additional fields -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="number" class="form-label">Number</label>
+                            <input type="number" class="form-control" id="number" name="number" value="{{ profile.number }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" value="{{ profile.profile_picture.url }}">
+                        </div>
+                    </div>
+
+                    <!-- Bio field -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3">{{ profile.bio }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Location fields -->
+                    <h2 class="h5 my-4">Location</h2>
+                    <div class="row">
+                        <div class="col-sm-9 mb-3">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
+                        </div>
+                        <div class="col-sm-3 mb-3">
+                            <label for="location_number">Number</label>
+                            <input class="form-control" id="location_number" type="text" name="location_number" value="{{ profile.location_number }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city" value="{{ profile.city }}">
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country" name="country" value="{{ profile.country }}">
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <label for="zip" class="form-label">ZIP Code</label>
+                            <input type="tel" class="form-control" id="zip_code" name="zip_code" value="{{ profile.zip_code }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" name="update_profile" class="btn btn-primary">Save All</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card card-body border-0 shadow mb-4 mb-xl-0">
+                <h2 class="h5 mb-4">Alerts & Notifications</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex align-items-center justify-content-between px-0 border-bottom">
+                        <div>
+                            <h3 class="h6 mb-1">Company News</h3>
+                            <p class="small pe-4">Get Rocket news, announcements, and product updates</p>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="user-notification-1">
+                                <label class="form-check-label" for="user-notification-1"></label>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center justify-content-between px-0 border-bottom">
+                        <div>
+                            <h3 class="h6 mb-1">Account Activity</h3>
+                            <p class="small pe-4">Get important notifications about you or activity you've missed</p>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="user-notification-2" checked>
+                                <label class="form-check-label" for="user-notification-2"></label>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center justify-content-between px-0">
+                        <div>
+                            <h3 class="h6 mb-1">Meetups Near You</h3>
+                            <p class="small pe-4">Get an email when a Dribbble Meetup is posted close to my location</p>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="user-notification-3" checked>
+                                <label class="form-check-label" for="user-notification-3"></label>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="row">
+                <div class="col">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <div class="profile-cover rounded-top" data-background="/static/assets/img/profile-cover.jpg">
+                        </div>
+                        <div class="card-body pb-5">
+                            {% if profile.profile_picture %}
+                            <img class="rounded-circle mx-auto mb-4" src="{{ profile.profile_picture.url }}" id="profile_picture" name="profile_picture" width="150" height="150" alt="Profile Picture">
+                            {% endif %}
+                            <h4 class="h3">{{ user.first_name }} {{user.last_name}}</h4>
+                            <p class="fw-normal">{{ profile.bio }}</p>
+                            <p class="text-gray mb-4">{{ profile.city }}, {{ profile.country }} </p>
+
+                            <a class="btn btn-sm btn-gray-800 d-inline-flex align-items-center me-2" href="#">
+                                <svg class="icon icon-xs me-1" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z">
+                                    </path>
+                                </svg>
+                                Connect
+                            </a>
+                            <a class="btn btn-sm btn-secondary" href="#">Send Message</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <h2 class="h5 mb-4">Select profile photo</h2>
+                        <div class="">
+                            <form method="POST" action="{% url 'create_or_update_profile' user.id %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                            <div class="me-3">
+                                <!-- Avatar -->
+                                <div class="user-avatar xl-avatar">
+                                    <img class="rounded" src="{{ profile.profile_picture.url }}" alt="change avatar" width="150" height="150">
+                                </div>
+                            </div>
+                            <div class="file-field">
+                                <div class="ms-xl-3">
+                                    <div class="d-flex">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
+                                            <path
+                                                d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z" />
+                                        </svg>
+                                        <input type="file">
+                                        <div class="d-md-block text-left">
+                                            <div class="fw-normal text-dark mb-1">Choose Image</div>
+                                            <div class="text-gray small">JPG, GIF or PNG. Max size of 800K</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Delete Account</h5>
+                            <p class="card-text">If you delete your profile you'll be deleting your account from
+                                BEHAIRV.</p>
+                            <a href="{% url 'delete_profile' user.id %}" class="btn btn-danger"
+                                onclick="return confirm('Are you sure you want to delete your profile?')">Delete
+                                Profile</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card card-body border-0 shadow mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">My Payment Method</h5>
+                            <p class="card-text">Securely save your card details for hassle-free payments.</p>
+                            <a href="/payment_method">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-plus-square pe-1" viewBox="0 0 16 16">
+                                    <path
+                                        d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                    <path
+                                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                </svg>
+                                Add Payment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!--/row-->
+</div> <!--/container-->
+
+{% endblock content %}

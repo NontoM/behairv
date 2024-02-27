@@ -1,0 +1,56 @@
+{% extends 'customer/calendar_base.html' %}
+
+{% block content %}
+    <!-- Message container for success or error messages -->
+    <div id="message-container" class="alert" style="display: none;"></div>
+
+    <div class="container mt-3 mb-3">
+        <!-- Placeholder for the create event form -->
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Create Event</h2>
+                <form method="post" id="createEventForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title:</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_time" class="form-label">Start Time:</label>
+                        <input type="datetime-local" class="form-control" name="start_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_time" class="form-label">End Time:</label>
+                        <input type="datetime-local" class="form-control" name="end_time" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="createEventSubmit">Create Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle form submission for creating events
+        $('#createEventForm').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    // Close the create event form and display a message
+                    $('#createEventModal').modal('hide');
+                    displayMessage(response.message, response.status);
+                    // Update the calendar immediately
+                    refreshCalendarEvents();
+                },
+                error: function (error) {
+                    displayMessage(error.responseJSON.message, 'error');
+                }
+            });
+        });
+    </script>
+{% endblock %}

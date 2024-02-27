@@ -1,0 +1,181 @@
+{% extends 'customer/dashboard.html' %}
+
+{% block content %}
+<!-- Message container for success or error messages -->
+<div id="message-container" class="alert" style="display: none;"></div>
+
+<div class="d-flex mt-3 mb-3">
+    <!-- Left Button -->
+    <button type="button" class="btn btn-dark mt-2 h-50" data-bs-toggle="modal" data-bs-target="#createUpdateAppointmentModal">
+    {{ action }} Appointment
+    </button>
+
+    <ul class="d-flex justify-content-end ms-auto mt-2">
+        <!-- Right Buttons -->
+        <li><a class="btn btn-primary me-2" href="{% url 'today_appointments' %}" role="button">Today's Appointments</a></li>
+        <li><a class="btn btn-secondary me-2" href="{% url 'past_appointments' %}" role="button">Past Appointments</a></li>
+        <li><a class="btn btn-success" href="{% url 'all_appointments' %}" role="button">All Appointments</a></li>
+    </ul>
+</div>
+
+<!-- Placeholder for the calendar -->
+<div class="container-fluid bg-light p-3">
+    <div class="row">
+        <div class="col-12">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<!-- Modal for creating and updating appointments -->
+<div class="modal fade" id="createUpdateAppointmentModal" tabindex="-1"
+    aria-labelledby="createUpdateAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createUpdateAppointmentModalLabel">
+                    {{ action }} Appointment
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <form method="post" id="appointmentForm" action="{% if action == 'Create' %}{% url 'appointment_create' %}{% elif action == 'Update' %}{% url 'appointment_update' appointment.id %}{% endif %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="service" class="form-label">Service</label>
+                        <select class="form-select" id="service" name="service">
+                            {% for service in services %}
+                                <option value="{{ service.id }}" {% if action == 'Update' and service.id == appointment.service.id %}selected{% endif %}>
+                                    {{ service.name }} {{ service.description }} R{{ service.price }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date"
+                            value="{% if action == 'Update' %}{{ appointment.date|date:'Y-m-d' }}{% endif %}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="form-label">Time</label>
+                        <input type="time" class="form-control" id="time" name="time" value="{% if action == 'Update' %}{{ appointment.time }}{% endif %}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Note</label>
+                        <textarea class="form-control" id="note" name="note">{% if action == 'Update' %}{{ appointment.note }}{% endif %}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="{% url 'appointment_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '{% url "get_appointments" %}',
+            dateClick: function (info) {
+                console.log('Date Clicked:', info);
+                openCreateUpdateModal('Create Appointment', '{% url "appointment_create" %}');
+            },
+
+            eventClick: function (info) {
+                var updateUrl = '{% url "appointment_update" 0 %}'.replace("0", info.event.id);
+                openCreateUpdateModal('Update Appointment', updateUrl);
+            },
+
+            eventResizableFromStart: true,
+            editable: true,
+        });
+
+        calendar.render();
+
+        // Function to open the create/update appointment modal
+        function openCreateUpdateModal(title, formUrl) {
+            var modal = $('#createUpdateAppointmentModal');
+            modal.find('.modal-title').text(title);
+
+            $.ajax({
+                url: formUrl,
+                success: function (formHtml) {
+                    modal.find('#modalBodyContent').html(formHtml);
+                    modal.modal('show');
+                    initializeFormSubmission(modal);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    console.error(status + ": " + error);
+                }
+            });
+        }
+
+        function initializeFormSubmission(modal) {
+            // Add your form submission logic here
+            // Example: Assuming the form has an ID of 'appointmentForm'
+            modal.find('#appointmentForm').on('submit', function (e) {
+                e.preventDefault();
+                submitAppointmentForm(modal);
+            });
+        }
+
+        function submitAppointmentForm(modal) {
+            // Add your form submission AJAX logic here
+            // Example: Serialize the form data and send an AJAX request
+            $.ajax({
+                url: modal.find('#appointmentForm').attr('action'),
+                method: 'POST',
+                data: modal.find('#appointmentForm').serialize(),
+                success: function (response) {
+                    modal.modal('hide');
+                    displayMessage(response.message, response.status);
+                    refreshCalendarEvents();
+                    // Clear the form after successful submission
+                    modal.find('#appointmentForm')[0].reset();
+                },
+                error: function (error) {
+                    displayMessage(error.responseJSON.message, 'error');
+                }
+            });
+        }
+
+        // Function to refresh the calendar events
+        function refreshCalendarEvents() {
+            if (calendar) {
+                calendar.refetchEvents();
+            }
+        }
+
+        // Function to display the message to the user
+        function displayMessage(message, type) {
+            var messageContainer = $('#message-container');
+            messageContainer.removeClass('alert-success alert-danger');
+            messageContainer.text(message);
+            if (type === 'success') {
+                messageContainer.addClass('alert-success');
+            } else if (type === 'error') {
+                messageContainer.addClass('alert-danger');
+            }
+            messageContainer.show();
+            setTimeout(function () {
+                messageContainer.hide();
+            }, 5000);
+        }
+    });
+</script>
+
+
+
+{% endblock %}

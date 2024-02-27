@@ -1,0 +1,72 @@
+{% extends 'main_pages/base.html' %}
+{% load tz %}
+
+{% block content %}
+  <div class="container-fluid mt-4 pt-4">
+    <h2>Working Hours List</h2>
+
+    {% timezone "Africa/Johannesburg" %}
+      {% now "l" as current_day %}
+      {% now "H:i" as current_time %}
+    {% endtimezone %}
+
+    <div class="mb-3">
+      <strong>Trading Hours:</strong>
+
+      {% for working_hours in working_hours_list %}
+        {% if current_day == working_hours.day %}
+          {% if not working_hours.closed %}
+            {% if working_hours.opening_time and working_hours.closing_time %}
+              {% with opening_time=working_hours.opening_time|time:"H:i" closing_time=working_hours.closing_time|time:"H:i" %}
+                {% if current_time >= opening_time and current_time <= closing_time %}
+                  <span class="text-success">Open</span>
+                {% elif current_time < opening_time %}
+                  <span class="text-danger">Closed - Not Opened Yet</span>
+                {% elif current_time > closing_time %}
+                  <span class="text-danger">Closed - Already Closed</span>
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              <span class="text-danger">Closed - Day Mismatch</span>
+            {% endif %}
+          {% else %}
+            <span class="text-danger">Closed - Explicitly Closed</span>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Day</th>
+          <th scope="col">Opening Time</th>
+          <th scope="col">Closing Time</th>
+          <th scope="col">Additional Information</th>
+          <th scope="col">Closed</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for working_hours in working_hours_list %}
+          <tr>
+            <td>{{ working_hours.day }}</td>
+            <td>{{ working_hours.opening_time|default:''|time:"H:i" }}</td>
+            <td>{{ working_hours.closing_time|default:''|time:"H:i" }}</td>
+            <td>{{ working_hours.additional_info }}</td>
+            <td>
+              {% if working_hours.closed %}
+              <span style="color: red;">Closed</span>              
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'working_hours_update' working_hours.id %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'working_hours_delete' working_hours.id %}" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'working_hours_create' %}" class="btn btn-success">Add Working Hours</a>
+  </div>
+{% endblock %}

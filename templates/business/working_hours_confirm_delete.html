@@ -1,0 +1,11 @@
+{% extends 'main_pages/base.html' %}
+
+{% block content %}
+  <h2>Delete Working Hours</h2>
+  <p>Are you sure you want to delete the working hours?</p>
+  <form method="post" action="">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'working_hours_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

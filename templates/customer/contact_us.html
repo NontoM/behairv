@@ -1,0 +1,44 @@
+{% extends 'main_pages/base.html' %}
+{% block content %}
+
+<section class="bg-light">
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card card-body border-0 shadow d-flex align-items-center justify-content-center  p-5">
+                    <h2 class="h3 mb-4 mt-5">Contact Us</h2>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="col-md-6 mb-3">
+                            <label for="inputSubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" name="subject" id="subject"
+                                placeholder="Enter Subject">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="inputEmail" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" name="email" id="email_address"
+                                placeholder="Enter your email address">
+                        </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="inputmessage" class="form-label">Message</label>
+                                <input type="text" class="form-control" name="message"
+                                    placeholder="Enter your message" id="message">
+                            </div>
+                            
+                        {% for error in field.errors %}
+                        <span style="color:red">{{ error }}</span>
+                        {% endfor %}
+
+                        <div class="d-grid">
+                            <button type="submit" name="register" class="btn btn-primary">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+</section>
+
+{% endblock content %}

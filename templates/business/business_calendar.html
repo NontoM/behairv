@@ -1,0 +1,199 @@
+{% extends 'customer/dashboard.html' %}
+
+{% block content %}
+<div class="d-flex mt-3 mb-3">
+    <!-- Left heading -->
+    <h5 class="mt-2">Event Planner</h5>
+       
+    <ul class="d-flex justify-content-end ms-auto mt-2">
+        <!-- Right Buttons -->
+        <li><a class="btn btn-primary me-2" href="{% url 'today_appointments' %}" role="button">Today's Appointments</a></li>
+        <li><a class="btn btn-secondary me-2" href="{% url 'past_appointments' %}" role="button">Past Appointments</a></li>
+        <li><a class="btn btn-success" href="{% url 'all_appointments' %}" role="button">All Appointments</a></li>
+    </ul>
+</div>
+
+<!-- Placeholder for the calendar -->
+<div class="container-fluid bg-light p-3">
+    <div class="row">
+        <div class="col-12">
+            <div id="calendar"></div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<!-- Modal for creating and updating appointments -->
+<div class="modal fade" id="createUpdateAppointmentModal" tabindex="-1"
+     aria-labelledby="createUpdateAppointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createUpdateAppointmentModalLabel">{{ action }} Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="deleteAppointmentBtn" style="display: none;">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Message container for success or error messages -->
+<div id="message-container" class="alert" style="display: none;"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '{% url "get_appointments" %}',
+            dateClick: function (info) {
+                openCreateUpdateModal('Create Appointment', '{% url "appointment_create" %}');
+            },
+            eventClick: function (info) {
+                openCreateUpdateModal('Update Appointment', '{% url "appointment_update" 0 %}'.replace("0", info.event.id), info.event.id);
+            },
+            eventResizableFromStart: true,
+            editable: true,
+        });
+
+        calendar.render();
+
+function openCreateUpdateModal(title, formUrl, appointmentId) {
+    $.ajax({
+        url: formUrl,
+        success: function (formHtml) {
+            console.log('Received form HTML:', formHtml); // Log the form HTML
+            $('#modalBodyContent').html(formHtml);
+            $('#createUpdateAppointmentModalLabel').text(title);
+            $('#createUpdateAppointmentModal').modal('show');
+
+            // Check if the form is for an existing appointment (update)
+            var isUpdate = formUrl.includes("appointment_update");
+
+            // Toggle visibility of the delete button
+            $('#deleteAppointmentBtn').toggle(isUpdate).attr('data-appointment-id', appointmentId);
+
+            initializeFormSubmission();
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+            console.error(status + ": " + error);
+        }
+    });
+}
+
+
+        function initializeFormSubmission() {
+            $('#appointmentForm').on('submit', function (e) {
+                e.preventDefault();
+                submitAppointmentForm();
+            });
+        }
+
+        function submitAppointmentForm() {
+            // Get the CSRF token from the cookie
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajax({
+                url: $('#appointmentForm').attr('action'),
+                method: 'POST',
+                data: $('#appointmentForm').serialize(),
+                headers: { 'X-CSRFToken': csrftoken }, // Include the CSRF token in the headers
+                success: function (response) {
+                    $('#createUpdateAppointmentModal').modal('hide');
+                    displayMessage(response.message, response.status);
+                    refreshCalendarEvents();
+                    // Clear the form after successful submission
+                    $('#appointmentForm')[0].reset();
+                },
+                error: function (error) {
+                    displayMessage(error.responseJSON.message, 'error');
+                }
+            });
+        }
+
+        // Handle delete logic directly within the click event
+        $('#deleteAppointmentBtn').on('click', function () {
+            var appointmentId = $('#deleteAppointmentBtn').attr('data-appointment-id');
+            if (appointmentId && confirm('Are you sure you want to delete this appointment?')) {
+                // Get the CSRF token from the cookie
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajax({
+                    url: '{% url "appointment_delete" 0 %}'.replace("0", appointmentId),
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrftoken }, // Include the CSRF token in the headers
+                    success: function (response) {
+                        displayMessage(response.message, response.status);
+                        $('#createUpdateAppointmentModal').modal('hide');
+                        refreshCalendarEvents();
+                    },
+                    error: function (error) {
+                        displayMessage(error.responseJSON.message, 'error');
+                    }
+                });
+            } else {
+                displayMessage('Appointment ID not found.', 'error');
+            }
+        });
+
+        $('#createUpdateAppointmentModal').on('show.bs.modal', function () {
+            // Update the FullCalendar layout when the modal is shown
+            calendar.updateSize();
+        });
+
+        $('#createUpdateAppointmentModal').on('hidden.bs.modal', function () {
+            refreshCalendarEvents();
+        });
+
+        function refreshCalendarEvents() {
+            if (calendar) {
+                calendar.refetchEvents();
+            }
+        }
+
+        function displayMessage(message, type) {
+            var messageContainer = $('#message-container');
+            messageContainer.removeClass('alert-success alert-danger');
+            messageContainer.text(message);
+            if (type === 'success') {
+                messageContainer.addClass('alert-success');
+            } else if (type === 'error') {
+                messageContainer.addClass('alert-danger');
+            }
+            messageContainer.show();
+            setTimeout(function () {
+                messageContainer.hide();
+            }, 5000);
+        }
+
+        // Function to get the CSRF token from the cookie
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+
+{% endblock %}
