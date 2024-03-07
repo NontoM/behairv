@@ -1,54 +1,47 @@
-<!-- your_app/templates/business/catalog_form.html -->
 {% extends 'main_pages/base.html' %}
 {% load static %}
 {% block head_title %}Create Catalog{% endblock head_title %}
+
 {% block content %}
+  <div class="container mt-5">
+    <!-- Messages div -->
+    {% if messages %}
+      <div class="alert alert-dismissible {% if messages.tags %}alert-{{ messages.tags }}{% endif %}">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+    
+    <h2>{{ action }} Catalog</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="business_name" class="form-label">Business Name</label>
+        <input type="text" class="form-control" id="business_name" name="business_name" value="{{ catalog.business_name }}">
+      </div>
+      <div class="mb-3">
+        <label for="business_contact" class="form-label">Business Contact</label>
+        <input type="text" class="form-control" id="business_contact" name="business_contact" value="{{ catalog.business_contact }}">
+      </div>
+      <div class="mb-3">
+        <label for="bio" class="form-label">Bio</label>
+        <textarea class="form-control" id="bio" name="bio">{{ catalog.bio }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label for="business_cover_pic" class="form-label">Business Cover Pic</label>
+        <input type="file" class="form-control" id="business_cover_pic" name="business_cover_pic" value="{{ catalog.business_cover_pic.url }}">
+      </div>
+      <div class="mb-3">
+        <label for="business_logo" class="form-label">Business Logo</label>
+        <input type="file" class="form-control" id="business_logo" name="business_logo" value="{{ catalog.business_logo.url }}">
+      </div>
+      <!-- Add other fields as needed -->
 
-{% include 'includes/navbar.html' %}
-
-<div class="container mt-5">
-    <h1>Create Catalog</h1>
-    <form method="post" enctype="multipart/form-data" class="mt-4">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="id_business_name" class="form-label">Business Name</label>
-            <input type="text" name="business_name" id="id_business_name" class="form-control" value="{% if catalog %}{{ catalog.business_name }}{% endif %}" required>
-        </div>
-        <div class="mb-3">
-            <label for="id_business_contact" class="form-label">Business Contact</label>
-            <input type="text" name="business_contact" id="id_business_contact" class="form-control" value="{% if catalog %}{{ catalog.business_contact }}{% endif %}" required>
-        </div>
-        <div class="mb-3">
-            <label for="id_bio" class="form-label">Bio</label>
-            <textarea name="bio" id="id_bio" class="form-control">{% if catalog %}{{ catalog.bio }}{% endif %}</textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="id_business_cover_pic" class="form-label">Business Cover Pic</label>
-            <div class="input-group">
-                <input type="file" name="business_cover_pic" id="id_business_cover_pic" class="form-control" required>
-                <label class="input-group-text" for="id_business_cover_pic">Choose file</label>
-            </div>
-            {% if catalog.business_cover_pic %}
-                <small class="text-muted">Current file: {{ catalog.business_cover_pic.name }}</small>
-            {% endif %}
-        </div>
-        <div class="mb-3">
-            <label for="id_business_logo" class="form-label">Business Logo</label>
-            <div class="input-group">
-                <input type="file" name="business_logo" id="id_business_logo" class="form-control" required>
-                <label class="input-group-text" for="id_business_logo">Choose file</label>
-            </div>
-            {% if catalog.business_logo %}
-                <small class="text-muted">Current file: {{ catalog.business_logo.name }}</small>
-            {% endif %}
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="{% url 'catalog_list' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-</div>
-
-{% include 'includes/footer.html' %}
-
-{% endblock content %}
+  </div>
+  
+  {% include 'includes/footer.html' %}
+{% endblock %}

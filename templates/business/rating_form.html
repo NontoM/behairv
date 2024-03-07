@@ -1,0 +1,115 @@
+
+
+{% extends 'business/dashboard.html' %}
+
+{% block content %}
+
+  <style>
+    .rating-stars input[type="radio"] {
+      display: none;
+    }
+
+    .rating-stars label {
+      cursor: pointer;
+      font-size: 24px;
+      color: grey;
+      transition: color 0.3s ease-in-out;
+      display: inline-block;
+    }
+
+    .rating-stars input[type="radio"]:checked ~ label {
+      color: gold;
+    }
+  </style>
+
+  <h2>Create/Update Rating</h2>
+  <!-- Button to trigger modal -->
+
+  <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{ rating.id }}">
+Create/Update Rating
+  </button>
+  
+  
+  <!-- Modal -->
+<div class="modal fade" id="updateModal{{ rating.id }}" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-rtl"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Add/Update Rating</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}"
+                    role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            </div>
+          <div class="mb-3">
+            <label for="salon_name" class="form-label">Salon Name</label>
+            <input type="text" class="form-control" id="salon_name_modal" name="salon_name" value="{{ rating.salon_name }}" placeholder="Enter salon name" required>
+          </div>
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <div class="rating-stars" id="rating-stars-modal">
+              {% for i in "12345" %}
+                <input type="radio" id="rating{{ i }}_modal" name="rating" value="{{ i }}" {% if rating.rating == i %}checked{% endif %} {% if rating.rating %}disabled{% endif %}>
+                <label for="rating{{ i }}_modal" class="star" data-value="{{ i }}">★</label>
+              {% endfor %}
+            </div>
+            <input type="hidden" id="selected-rating-modal" name="selected_rating" value="{{ rating.rating }}">
+          </div>
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea class="form-control" id="comment_modal" name="comment" placeholder="Enter your comment">{{ rating.comment }}</textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ratingStarsModal = document.getElementById('rating-stars-modal');
+    const selectedRatingInputModal = document.getElementById('selected-rating-modal');
+
+    // Set the initial star colors based on the selected rating
+    updateStars(selectedRatingInputModal.value, ratingStarsModal);
+
+    ratingStarsModal.addEventListener('click', function (event) {
+      const clickedLabel = event.target.closest('label');
+      if (clickedLabel) {
+        const value = clickedLabel.getAttribute('data-value');
+        selectedRatingInputModal.value = value;
+        // Update the appearance of the stars
+        updateStars(value, ratingStarsModal);
+      }
+    });
+
+    function updateStars(value, starsContainer) {
+      const labels = starsContainer.querySelectorAll('label');
+      labels.forEach(function (label) {
+        const labelValue = label.getAttribute('data-value');
+        label.style.color = labelValue <= value ? 'gold' : 'grey';
+      });
+    }
+  });
+</script>
+
+
+
+{% endblock %}

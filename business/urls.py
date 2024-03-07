@@ -46,4 +46,13 @@ urlpatterns = [
     path('catalog_create/', views.catalog_create_view, name='catalog_create'),
     path('catalog_update/<int:catalog_id>/', views.catalog_update_view, name='catalog_update'),
     path('catalog_delete/<int:catalog_id>/', views.catalog_delete_view, name='catalog_delete'),
+
+
+    path('rating_list/', views.rating_list_view, name='rating_list'),
+    path('rating_create/', views.rating_create_view, name='rating_create'),
+    path('rating_update/<int:rating_id>/', views.rating_update_view, name='rating_update'),
+    path('rating_delete/<int:rating_id>/', views.rating_delete_view, name='rating_delete'),
+
+
+
 ]

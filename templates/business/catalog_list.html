@@ -8,6 +8,26 @@
 
 {% include 'includes/navbar.html' %}
 
+<style>
+  .rating-stars {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .star {
+    font-size: 24px;
+    color: grey;
+    transition: color 0.3s ease-in-out;
+    display: inline-block;
+  }
+
+  .yellow {
+    color: gold;
+  }
+</style>
+
 <!-- ======= Breadcrumb Start ======= -->
 <nav aria-label="breadcrumb" class="container-fluid mt-5 pt-5">
   <ol class="breadcrumb">
@@ -17,44 +37,86 @@
   </ol>
 </nav>
 <!-- Breadcrumb End -->
+    <!-- Messages div -->
+    {% if messages %}
+      <div class="alert alert-dismissible {% if messages.tags %}alert-{{ messages.tags }}{% endif %}">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
 
 <div class="container-fluid">
   <ul class="d-inline-flex list-inline">
-    <li class="pe-2">Ratings</li>
-    <li class="pe-2">Trading Hours</li>
+    <li class="pe-2">
+      {% for rating in ratings %}
+      <div class="rating-stars">
+        {% for _ in "12345" %}
+          {% if forloop.counter <= rating.rating %}
+            <label class="star yellow">&#9733;</label>
+          {% else %}
+            <label class="star">&#9733;</label>
+          {% endif %}
+        {% endfor %}
+        ({{ rating.rating }})
+      </div>
+      </li>
+      {% empty %}
+      <li class="list-group-item pe-3">
+        <div class="star-icons">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+          </svg>
+              </div>
+      {% endfor %}
+    </li>
+    <li class="pe-2">
+      <div class="mb-3">
+        {% timezone "Africa/Johannesburg" %}
+            {% now "l" as current_day %}
+            {% now "H:i" as current_time %}
+          {% endtimezone %}
+          <div class="mb-3">
+            <strong>Current Day Status:</strong>
+            {% for working_hours in working_hours_list %}
+              {% if current_day == working_hours.day %}
+                {% if not working_hours.closed %}
+                  {% if working_hours.opening_time and working_hours.closing_time %}
+                    {% with opening_time=working_hours.opening_time|time:"H:i" closing_time=working_hours.closing_time|time:"H:i" %}
+                      {% if current_time >= opening_time and current_time <= closing_time %}
+                        <span class="text-success">Open</span>
+                      {% elif current_time < opening_time %}
+                        <span class="text-danger">Closed - Not Opened Yet</span>
+                      {% elif current_time > closing_time %}
+                        <span class="text-danger">Closed - Already Closed</span>
+                      {% endif %}
+                    {% endwith %}
+                  {% else %}
+                    <span class="text-danger">Closed - Day Mismatch</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-danger">Closed - Explicitly Closed</span>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+      </div>
+    </li>
     <li class="pe-2">Get Directions</li>
   </ul>
-</div>
-
-<div class="mb-3">
-  {% timezone "Africa/Johannesburg" %}
-      {% now "l" as current_day %}
-      {% now "H:i" as current_time %}
-    {% endtimezone %}
-    <div class="mb-3">
-      <strong>Current Day Status:</strong>
-      {% for working_hours in working_hours_list %}
-        {% if current_day == working_hours.day %}
-          {% if not working_hours.closed %}
-            {% if working_hours.opening_time and working_hours.closing_time %}
-              {% with opening_time=working_hours.opening_time|time:"H:i" closing_time=working_hours.closing_time|time:"H:i" %}
-                {% if current_time >= opening_time and current_time <= closing_time %}
-                  <span class="text-success">Open</span>
-                {% elif current_time < opening_time %}
-                  <span class="text-danger">Closed - Not Opened Yet</span>
-                {% elif current_time > closing_time %}
-                  <span class="text-danger">Closed - Already Closed</span>
-                {% endif %}
-              {% endwith %}
-            {% else %}
-              <span class="text-danger">Closed - Day Mismatch</span>
-            {% endif %}
-          {% else %}
-            <span class="text-danger">Closed - Explicitly Closed</span>
-          {% endif %}
-        {% endif %}
-      {% endfor %}
-    </div>
 </div>
 
 <!-- ======= About Section Start ======= -->
@@ -63,21 +125,18 @@
     <div class="row g-5">
       <div class="col-lg-5 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
         <div class="h-100 position-relative">
-          <img src="{% static 'assets/images/about-2.jpg' %}" class="img-fluid w-100 rounded" alt="business-image">
+          {% for catalog in catalogs %}
+          <img src="{{ catalog.business_cover_pic.url}}" class="img-fluid w-100 rounded" name="business_cover_pic" alt="business-image">
           <div class="position-absolute w-75" style="top: 5%; left: 0%;">
-            <img src="{% static 'assets/images/logo1.png' %}" class="img-fluid w-75 rounded bg-dark"
-              alt="business-logo">
+            <img src="{{ catalog.business_logo.url }}" class="img-fluid w-75 rounded bg-dark" name="business_logo" alt="business-logo">
           </div>
         </div>
       </div>
       <div class="col-lg-7 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".5s">
         <h5 class="text-primary">About Us</h5>
-        <h1 class="mb-4 display-1 text-uppercase">Best Vision Salon</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed efficitur quis purus ut interdum. Pellentesque
-          aliquam dolor eget urna ultricies tincidunt. Nam volutpat libero sit amet leo cursus, ac viverra eros
-          tristique. Morbi quis quam mi. Cras vel gravida eros. Proin scelerisque quam nec elementum viverra.
-          Suspendisse viverra hendrerit diam in tempus. Etiam gravida justo nec erat vestibulum, et malesuada augue
-          laoreet.</p>
+        <h1 class="mb-4 display-1 text-uppercase text-dark">{{ catalog.business_name }}</h1>
+        <p>{{ catalog.bio }}</p>
+          {% endfor %}
       </div>
     </div>
   </div>
@@ -150,7 +209,6 @@
               {% endif %}
             </div>
           {% endfor %}
-
         </div>
       </div>
       <div class="col-lg-6 col-md-6 col-sm-12 wow fadeIn" data-wow-delay=".3s">
@@ -215,6 +273,35 @@
       });
     });
   });
+
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const ratingStarsModal = document.getElementById('rating-stars-modal');
+    const selectedRatingInputModal = document.getElementById('selected-rating-modal');
+
+    // Set the initial star colors based on the selected rating
+    updateStars(selectedRatingInputModal.value, ratingStarsModal);
+
+    ratingStarsModal.addEventListener('click', function (event) {
+      const clickedLabel = event.target.closest('label');
+      if (clickedLabel) {
+        const value = clickedLabel.getAttribute('data-value');
+        selectedRatingInputModal.value = value;
+        // Update the appearance of the stars
+        updateStars(value, ratingStarsModal);
+      }
+    });
+
+    function updateStars(value, starsContainer) {
+      const labels = starsContainer.querySelectorAll('label');
+      labels.forEach(function (label) {
+        const labelValue = label.getAttribute('data-value');
+        label.style.color = labelValue <= value ? 'gold' : 'grey';
+      });
+    }
+  });
+
+
 </script>
 
 

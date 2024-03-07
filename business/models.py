@@ -62,4 +62,16 @@ class Catalog(models.Model):
     business_logo = models.ImageField(upload_to='business_logo/', blank=True, null=True, default="business_logo/to/default/no-profile-picture.png")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True,blank=True)
+    salon_name = models.CharField(max_length=255, null=True,blank=True)
+    rating = models.PositiveIntegerField(default=0, choices=[(i, i) for i in range(1, 6)])
+    comment = models.TextField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return f"{self.user.username} - {self.salon_name}"
+
